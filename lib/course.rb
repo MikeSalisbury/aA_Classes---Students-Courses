@@ -50,5 +50,32 @@
 #     * May want to write a `Student#has_conflict?` method to help.
 
 class Course
+  attr_reader :name, :department, :credits, :days, :time_block, :students
+  attr_accessor :students
+
+
+  def initialize(course_name, department, credits, days, time_block)
+    @name = course_name
+    @department = department
+    @credits = credits
+    @students = []
+    @days = days
+    @time_block = time_block
+  end
+
+  def add_student(student)
+    if student.enroll(self) && !@students.include?(student)
+      @students << student.enroll(self)
+    end
+  end
+
+  def conflicts_with?(second_course)
+    self.days.each do |day|
+        if second_course.days.include?(day) && self.time_block == second_course.time_block
+           return true
+        end
+      end
+    false
+  end
 
 end
